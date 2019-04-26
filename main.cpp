@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <fstream>
+#include<vector>
 
 using namespace std;
 
@@ -18,17 +19,13 @@ int main()
     if(file.is_open()) // checks to see if file opened
     {
         while(getline(file, line)) // reads file to end of *file*, not line
-        { 
-          stringstream ss(line); 
-          ss >> job_id[num] >> arrival_time [num] >> duration[num]; // read in each column's numbers
-          
-          cout << job_id[0] << endl;
-          cout << arrival_time [0] << endl;
-          cout << duration[0] << endl;
-          
-          file.close();
-        }  
-    } 
-    
+        {
+            stringstream ss(line);
+            ss >> job_id[num] >> arrival_time [num] >> duration[num]; // read in each column's numbers
+            cout << "JobID: " <<job_id[num]<< ", ArrTime: "<< arrival_time[num] << ", Duration: " <<duration[num]<<endl;
+            num++;
+        }
+        file.close();
+    }
     return 0;
 }
