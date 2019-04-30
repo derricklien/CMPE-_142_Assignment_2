@@ -15,8 +15,7 @@ int main()
     int num = 0; // num must start at 0
     int numberOFjobs = 0;
     string line;
-    
-    ifstream file ("cat.txt");  // file containing numbers in 3 columns //replace cat.txt later
+    ifstream file ("jobs.dat");  
     
     //reading and stroing file data
     if(file.is_open()) // checks to see if file opened
@@ -40,7 +39,6 @@ int main()
     }
     
     cout << "numberOFjobs: " <<numberOFjobs<<endl;
-    cout << "SJF: " <<endl;
     int temp = 0;
     int temp2 = 0;
     int temp3 = 0;
@@ -56,7 +54,84 @@ int main()
     vector <int> ElapsedTimeVec;
     vector <int> ResponceTimeVec;
     
+    //////////FIFO////////////
+    cout << "FIFO:" << endl;
+      for (int i = 0; i <numberOFjobs; i++)
+    {
+        cout << "JobID: " <<job_id[i]<< ", ArrTime: "<< arrival_time[i] << ", Duration: " <<duration[i]<<endl;
+    }
+    
+        for (int  i = 0; i<numberOFjobs; i++)
+    {
+        for (int j = 0; j <numberOFjobs; j++)
+        {
+            if (arrival_time[i] < arrival_time[j]) // arrange 1st arrival to last arrival using bubble sort
+            {
+                //                cout <<"Need to swap: "<< duration[i] << ">" << duration[j] <<endl;
+                temp = duration[j];
+                duration[j] = duration[i];
+                duration[i] = temp;
+                
+                temp2 = arrival_time[j];
+                arrival_time[j] = arrival_time[i];
+                arrival_time[i] = temp2;
+                
+                temp3 = job_id[j];
+                job_id[j] = job_id[i];
+                job_id[i] = temp3;
+            }
+        }
+    }
+    
+      cout << "Sorted Result:\n";
+      for (int i = 0; i <numberOFjobs; i++)
+      {
+          cout << "JobID: " <<job_id[i]<< ", ArrTime: "<< arrival_time[i] << ", Duration: " <<duration[i]<<endl;
+      }
+      
+      for (int i = 0; i <numberOFjobs; i++)
+    {
+        if (i == 0)
+        {
+            StartTimeVec.push_back(arrival_time[0]);
+            finish = arrival_time[0] + duration[0];
+            FinishTimeVec.push_back(finish);
+            ElapsedTimeVec.push_back(duration[0]);
+            responce = StartTimeVec[0] - arrival_time[0];
+            ResponceTimeVec.push_back(responce);
+        }
+        else
+        {
+            if (arrival_time[i] > FinishTimeVec[i-1])
+            {
+//                cout << "YEE\n";
+                StartTimeVec.push_back(arrival_time[i]);
+                finish = StartTimeVec[i]+ duration[i];
+                FinishTimeVec.push_back(finish);
+                Et = finish - arrival_time[i];
+                ElapsedTimeVec.push_back(Et);
+                responce = StartTimeVec[i] - arrival_time[i];
+                ResponceTimeVec.push_back(responce);
+            }
+            else
+            {
+//                cout<<"NAH\n";
+                StartTimeVec.push_back(FinishTimeVec[i-1]);
+                finish = StartTimeVec[i] + duration[i];
+                FinishTimeVec.push_back(finish);
+                Et = finish - arrival_time[i];
+                ElapsedTimeVec.push_back(Et);
+                responce = StartTimeVec[i] - arrival_time[i];
+                ResponceTimeVec.push_back(responce);
+            }
+            
+        }
+        cout << "JID: "<< job_id[i]<< " StartTime: " << StartTimeVec[i] << " FinishTime: " << FinishTimeVec[i]<< " ElapsedTime: " << ElapsedTimeVec[i] << " ResponseTime: " << ResponceTimeVec[i]<<endl;
+    }
+      
+    
     /////////SJF////////////
+    cout << "SJF: " <<endl;
     cout << "Original entry\n";
     for (int i = 0; i <numberOFjobs; i++)
     {
@@ -154,8 +229,6 @@ int main()
         TT = TT + duration[i];
     }
     
-    
-    
     cout << "AFTER SJF entry\n";
     for (int i = 0; i <numberOFjobs; i++)
     {
@@ -196,10 +269,9 @@ int main()
                 ElapsedTimeVec.push_back(Et);
                 responce = StartTimeVec[i] - arrival_time[i];
                 ResponceTimeVec.push_back(responce);
-            }
-            
+            }   
         }
-        cout << "JD: "<< job_id[i]<< " StartTime: " << StartTimeVec[i] << " FinishTime: " << FinishTimeVec[i]<< " ElapsedTime: " << ElapsedTimeVec[i] << " ResponceTime: " << ResponceTimeVec[i]<<endl;
+        cout << "JID: "<< job_id[i]<< " StartTime: " << StartTimeVec[i] << " FinishTime: " << FinishTimeVec[i]<< " ElapsedTime: " << ElapsedTimeVec[i] << " ResponseTime: " << ResponceTimeVec[i]<<endl;
     }
     StartTimeVec.clear();
     FinishTimeVec.clear();
